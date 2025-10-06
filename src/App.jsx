@@ -412,82 +412,64 @@ function App() {
             {/* ปุ่มลบทั้งหมดถูกนำออกตามคำขอ */}
             {videos.map((v) => (
               <div className="card" key={v.id}>
-                <div className="meta">
-                  {v.status === 'loading' && <div className="status running">กำลังสร้าง...</div>}
-                  {v.status === 'completed' && <div className="status succeeded">สำเร็จ</div>}
-                  {v.status === 'failed' && <div className="status failed">ล้มเหลว</div>}
-                  <div className="details">
-                    <span>10s</span>
-                    <span>•</span>
-                    <span>720p</span>
-                    <span>•</span>
-                    <span>{v.aspectRatio}</span>
-                    <button 
-                      onClick={() => deleteVideo(v.id)}
-                      title="ลบวีดีโอ"
-                      style={{
-                        marginLeft: '8px',
-                        padding: '4px 8px',
-                        fontSize: '16px',
-                        background: 'transparent',
-                        color: '#ff6b6b',
-                        border: '1px solid #ff6b6b',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        opacity: 0.7,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.opacity = '1'
-                        e.currentTarget.style.background = '#ff6b6b'
-                        e.currentTarget.style.color = 'white'
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.opacity = '0.7'
-                        e.currentTarget.style.background = 'transparent'
-                        e.currentTarget.style.color = '#ff6b6b'
-                      }}
-                    >
-                      ❌
-                    </button>
+                {/* Video/Thumbnail Section - แสดงด้านบน */}
+                {v.status === 'loading' && (
+                  <div className="video skeleton" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666', position: 'relative', aspectRatio: v.aspectRatio === '9:16' ? '9 / 16' : '16 / 9' }}>
+                    ⏳
+                    {v.request_id && (
+                      <button
+                        onClick={() => checkNow(v)}
+                        style={{ position: 'absolute', right: 10, bottom: 10, fontSize: 12, padding: '4px 8px', borderRadius: 6, border: '1px solid #888', background: 'transparent', color: 'inherit', cursor: 'pointer', opacity: 0.8 }}
+                        title="ตรวจสอบสถานะตอนนี้"
+                      >รีเฟรช</button>
+                    )}
                   </div>
+                )}
+                
+                {v.status === 'completed' && v.url && (
+                  <video
+                    className="video"
+                    src={v.url}
+                    controls
+                    playsInline
+                    onClick={() => openModal(v.url)}
+                    style={{ cursor: 'pointer', aspectRatio: v.aspectRatio === '9:16' ? '9 / 16' : '16 / 9' }}
+                  />
+                )}
+                
+                {v.status === 'failed' && (
+                  <div className="video" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#2a1a1a', color: '#ff9c9c', aspectRatio: v.aspectRatio === '9:16' ? '9 / 16' : '16 / 9' }}>
+                    ⚠️ {v.error || 'เกิดข้อผิดพลาด'}
+                  </div>
+                )}
+
+                {/* Prompt Text - แสดงตรงกลาง */}
+                <div className="prompt-text" title={v.prompt}>{v.prompt}</div>
+                
+                {/* Status & Metadata - แสดงด้านล่าง */}
+                <div className="meta">
+                  <div className="meta-left">
+                    {v.status === 'loading' && <div className="status running">กำลังสร้าง...</div>}
+                    {v.status === 'completed' && <div className="status succeeded">สำเร็จ</div>}
+                    {v.status === 'failed' && <div className="status failed">ล้มเหลว</div>}
+                    <div className="details">
+                      <span>10s</span>
+                      <span>•</span>
+                      <span>720p</span>
+                      <span>•</span>
+                      <span>{v.aspectRatio}</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => deleteVideo(v.id)}
+                    title="ลบวีดีโอ"
+                    className="delete-btn"
+                  >
+                    ❌
+                  </button>
                 </div>
-              <div className="prompt-text" title={v.prompt}>{v.prompt}</div>
-              
-              {v.status === 'loading' && (
-                <div className="video skeleton" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666', position: 'relative', aspectRatio: v.aspectRatio === '9:16' ? '9 / 16' : '16 / 9' }}>
-                  ⏳
-                  {v.request_id && (
-                    <button
-                      onClick={() => checkNow(v)}
-                      style={{ position: 'absolute', right: 10, bottom: 10, fontSize: 12, padding: '4px 8px', borderRadius: 6, border: '1px solid #888', background: 'transparent', color: 'inherit', cursor: 'pointer', opacity: 0.8 }}
-                      title="ตรวจสอบสถานะตอนนี้"
-                    >รีเฟรช</button>
-                  )}
-                </div>
-              )}
-              
-              {v.status === 'completed' && v.url && (
-                <video
-                  className="video"
-                  src={v.url}
-                  controls
-                  playsInline
-                  onClick={() => openModal(v.url)}
-                  style={{ cursor: 'pointer', aspectRatio: v.aspectRatio === '9:16' ? '9 / 16' : '16 / 9' }}
-                />
-              )}
-              
-              {v.status === 'failed' && (
-                <div className="video" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#2a1a1a', color: '#ff9c9c' }}>
-                  ⚠️ {v.error || 'เกิดข้อผิดพลาด'}
-                </div>
-              )}
-            </div>
-          ))}
+              </div>
+            ))}
           </>
         )}
       </div>

@@ -211,9 +211,10 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   overflow: hidden;
-  display: grid;
-  gap: 10px;
-  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
 }
 .card::before {
   content: '';
@@ -223,25 +224,64 @@
 }
 .card:hover::before { opacity: 1; }
 
-.meta { display: flex; justify-content: space-between; align-items: center; }
+.meta { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  padding: 12px 12px 14px;
+}
+
+.meta-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .status { font-weight: 700; font-size: 12px; }
 .status.queued, .status.running { color: #93c5fd; }
 .status.succeeded { color: #86efac; }
 .status.failed { color: #fca5a5; }
-.status { font-weight: 700; font-size: 14px; }
-.details { opacity: 0.85; font-size: 14px; display: flex; gap: 8px; }
+
+.details { 
+  opacity: 0.75; 
+  font-size: 13px; 
+  display: flex; 
+  gap: 6px; 
+}
+
+.delete-btn {
+  padding: 4px 8px;
+  font-size: 16px;
+  background: transparent;
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  opacity: 1;
+  background: #ff6b6b;
+  color: white;
+}
 
 .prompt-text { 
-  font-size: 16px; 
-  line-height: 1.6; 
-  opacity: 0.96;
+  font-size: 15px; 
+  line-height: 1.5; 
+  opacity: 0.9;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
-  min-height: 51px; /* 2 บรรทัด = 16px * 1.6 * 2 */
+  padding: 0 12px;
+  min-height: 45px; /* 2 บรรทัด = 15px * 1.5 * 2 */
 }
 
 .video {
