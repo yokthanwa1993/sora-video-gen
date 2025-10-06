@@ -1,0 +1,317 @@
+/* Layout */
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 32px;
+}
+
+.hero {
+  /* เอา padding ด้านข้างออกเพื่อให้ขอบ container ตรงกับผลลัพธ์ด้านล่าง */
+  padding: 40px 0 0;
+}
+
+.brand {
+  /* ให้กว้างเท่ากับ panel/results */
+  max-width: 1100px;
+  margin: 0 auto 16px;
+  text-align: center;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
+  color: #0b1020;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.brand h1 {
+  margin: 12px 0 6px;
+  font-size: clamp(40px, 6.2vw, 64px);
+  line-height: 1.05;
+  background: linear-gradient(90deg, #ffffff, #e2e8f0 60%, #cbd5e1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  opacity: 0.9;
+  font-size: clamp(16px, 2.1vw, 20px);
+}
+
+.panel {
+  /* ทำให้กว้างพอดีกับขอบของส่วน preview ข้างล่าง */
+  max-width: 1100px;
+  margin: 18px auto 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+/* Download/status bar */
+.downloadbar {
+  /* ให้กว้างเท่ากับ panel/results เพื่อจัดแนวขอบให้ตรงกัน */
+  max-width: 1100px;
+  margin: 14px auto 0;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+}
+.downloadbar .dl-title { font-weight: 700; font-size: 13px; opacity: .9; }
+.downloadbar .dl-prompt { opacity: .9; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.downloadbar .actions { display: flex; gap: 8px; }
+
+.progress { position: relative; width: 320px; }
+.progress .track { height: 10px; border-radius: 999px; background: rgba(255,255,255,.12); }
+.progress .bar { height: 10px; margin-top: -10px; border-radius: 999px; background: linear-gradient(90deg, var(--accent1), var(--accent2)); box-shadow: 0 6px 16px rgba(124,58,237,.25); }
+.progress .txt { display: block; margin-top: 6px; font-size: 12.5px; opacity: .9; text-align: right; }
+
+.prompt {
+  display: grid;
+  gap: 12px;
+}
+
+.prompt textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 96px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  outline: none;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.prompt textarea::placeholder { color: rgba(255,255,255,.55); opacity: 1; }
+
+.primary {
+  justify-self: end;
+  background: linear-gradient(135deg, var(--accent2), var(--accent1));
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 14px;
+  font-weight: 700;
+  box-shadow: 0 10px 25px rgba(6,182,212,0.25);
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+}
+.primary:hover { transform: translateY(-1px); filter: saturate(115%); box-shadow: 0 14px 30px rgba(124,58,237,0.28); }
+.primary:active { transform: translateY(0); }
+.primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ปุ่มหลักวางด้านล่างของ panel */
+.panel-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.options {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.field label {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.92;
+}
+.field input,
+.field select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  font-size: 16px;
+}
+.field .hint {
+  opacity: 0.75;
+  font-size: 12.5px;
+}
+
+.error {
+  margin-top: 10px;
+  color: #ff9c9c;
+}
+.error.small { font-size: 12px; opacity: 0.9; }
+
+.results {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  /* เอา padding ซ้ายขวาออกให้ขอบตรงกับ panel/brand */
+  padding: 0 0 40px;
+}
+
+@media (max-width: 968px) {
+  .results {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .results {
+    grid-template-columns: 1fr;
+  }
+}
+
+.empty {
+  grid-column: 1/-1;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+.card::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(120deg, transparent, rgba(124,58,237,0.08), transparent);
+  opacity: 0; transition: opacity .2s ease;
+}
+.card:hover::before { opacity: 1; }
+
+.meta { display: flex; justify-content: space-between; align-items: center; }
+.status { font-weight: 700; font-size: 12px; }
+.status.queued, .status.running { color: #93c5fd; }
+.status.succeeded { color: #86efac; }
+.status.failed { color: #fca5a5; }
+.status { font-weight: 700; font-size: 14px; }
+.details { opacity: 0.85; font-size: 14px; display: flex; gap: 8px; }
+
+.prompt-text { 
+  font-size: 16px; 
+  line-height: 1.6; 
+  opacity: 0.96;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  min-height: 51px; /* 2 บรรทัด = 16px * 1.6 * 2 */
+}
+
+.video {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 12px;
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+  animation: shimmer 1.2s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.footer {
+  text-align: center;
+  opacity: 0.7;
+  padding-bottom: 20px;
+}
+
+/* UI chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: linear-gradient(#0b1020, #0b1020) padding-box,
+    linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3)) border-box;
+  border: 1px solid transparent;
+  font-weight: 600;
+}
+
+.linklike { background: transparent; border: none; color: #9cc3ff; cursor: pointer; font-size: 12.5px; }
+.linklike:hover { text-decoration: underline; }
+
+/* Logout: red, elegant ghost-chip */
+.link-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: linear-gradient(#0b1020, #0b1020) padding-box,
+    linear-gradient(90deg, #ff6b6b, #ff9c9c) border-box;
+  color: #ff8a8a;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .2px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(255, 107, 107, 0.12);
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease, color .2s ease;
+}
+.link-logout::before { content: '⎋'; font-size: 14px; opacity: .95; }
+.link-logout:hover {
+  color: #ffb0b0;
+  filter: saturate(115%);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(255, 107, 107, 0.18);
+}
+.link-logout:active { transform: translateY(0); }
+.link-logout:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(255,107,107,.25); }
+
+/* Modal */
+.modal { position: fixed; inset: 0; z-index: 60; }
+.modal .backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(2px); }
+.modal .modal-body {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(900px, 92vw);
+  background: #0b1020; border: 1px solid rgba(255,255,255,.14); border-radius: 16px;
+  padding: 14px; box-shadow: 0 30px 80px rgba(0,0,0,.45);
+}
+.modal .modal-close { position: absolute; right: 8px; top: 4px; font-size: 26px; line-height: 1; background: transparent; border: none; color: #fff; opacity: .85; cursor: pointer; }

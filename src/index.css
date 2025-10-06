@@ -1,0 +1,52 @@
+:root {
+  --bg1: #060814;
+  --bg2: #0b1224;
+  --bg3: #0e1428;
+  --accent1: #06b6d4;
+  --accent2: #7c3aed;
+  --accent3: #f472b6;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  color: rgba(255,255,255,0.96);
+  background: radial-gradient(1200px 600px at 80% -20%, rgba(124,58,237,0.35), transparent 60%),
+    radial-gradient(900px 400px at -10% -10%, rgba(6,182,212,0.28), transparent 50%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+  font-family: 'Sukhumvit Set', 'Noto Sans Thai', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+}
+
+/* animated gradient glow */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -25%;
+  z-index: -1;
+  background: conic-gradient(from 180deg at 50% 50%,
+    rgba(124,58,237,.25), rgba(6,182,212,.2), rgba(244,114,182,.25), rgba(124,58,237,.25));
+  filter: blur(140px) saturate(160%);
+  opacity: .55;
+  animation: spin 40s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+h1 { margin: 0; }
+
+button {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  cursor: pointer;
+}
+
+input, select, textarea { font-family: inherit; font-size: 14px; }
