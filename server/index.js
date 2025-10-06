@@ -263,7 +263,7 @@ app.post('/api/update-video', async (req, res) => {
 })
 
 // Serve index.html for all other routes (SPA fallback)
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'))
 })
 
