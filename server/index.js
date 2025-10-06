@@ -2,6 +2,11 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import { createClient } from '@supabase/supabase-js'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 dotenv.config()
 
@@ -10,6 +15,9 @@ const port = process.env.PORT || 8787
 
 app.use(cors())
 app.use(express.json({ limit: '2mb' }))
+
+// Serve static files from dist folder (production build)
+app.use(express.static(path.join(__dirname, '../dist')))
 
 const MUAPIAPP_API_KEY = process.env.MUAPIAPP_API_KEY || ''
 const supabaseUrl = process.env.VITE_SUPABASE_URL
@@ -252,6 +260,11 @@ app.post('/api/update-video', async (req, res) => {
     console.error('Error:', error.message)
     return res.status(500).json({ error: error.message })
   }
+})
+
+// Serve index.html for all other routes (SPA fallback)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'))
 })
 
 app.listen(port, () => {

@@ -1,183 +1,146 @@
-# Supabase CLI
+# Sora Video Generator
 
-[![Coverage Status](https://coveralls.io/repos/github/supabase/cli/badge.svg?branch=main)](https://coveralls.io/github/supabase/cli?branch=main) [![Bitbucket Pipelines](https://img.shields.io/bitbucket/pipelines/supabase-cli/setup-cli/master?style=flat-square&label=Bitbucket%20Canary)](https://bitbucket.org/supabase-cli/setup-cli/pipelines) [![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/sweatybridge%2Fsetup-cli?label=Gitlab%20Canary)
-](https://gitlab.com/sweatybridge/setup-cli/-/pipelines)
+AI-powered video generator using OpenAI Sora 2 through MUAPI.ai integration. Built with React, Node.js, and Supabase.
 
-[Supabase](https://supabase.io) is an open source Firebase alternative. We're building the features of Firebase using enterprise-grade open source tools.
+## Features
 
-This repository contains all the functionality for Supabase CLI.
+- 🎬 Generate videos from text prompts using Sora 2
+- 🖼️ Image-to-video conversion support
+- 👤 Google OAuth authentication via Supabase
+- �� Video history and management
+- 🔄 Real-time video generation status updates
+- 🎨 Modern, responsive UI
 
-- [x] Running Supabase locally
-- [x] Managing database migrations
-- [x] Creating and deploying Supabase Functions
-- [x] Generating types directly from your database schema
-- [x] Making authenticated HTTP requests to [Management API](https://supabase.com/docs/reference/api/introduction)
+## Tech Stack
 
-## Getting started
+- **Frontend**: React + Vite
+- **Backend**: Node.js + Express
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth (Google OAuth)
+- **Video Generation**: MUAPI.ai (Sora 2 API)
 
-### Install the CLI
+## Prerequisites
 
-Available via [NPM](https://www.npmjs.com) as dev dependency. To install:
+- Node.js 18+ 
+- Supabase account ([supabase.com](https://supabase.com))
+- MUAPI.ai account ([muapi.ai](https://muapi.ai))
+- Google Cloud project (for OAuth)
 
-```bash
-npm i supabase --save-dev
-```
+## Environment Variables
 
-To install the beta release channel:
+Copy `.env.example` to `.env` and fill in your credentials:
 
-```bash
-npm i supabase@beta --save-dev
-```
+\`\`\`bash
+cp .env.example .env
+\`\`\`
 
-When installing with yarn 4, you need to disable experimental fetch with the following nodejs config.
+Required variables:
+- \`MUAPIAPP_API_KEY\` - Your MUAPI.ai API key
+- \`VITE_SUPABASE_URL\` - Your Supabase project URL
+- \`VITE_SUPABASE_ANON_KEY\` - Your Supabase anon key
+- \`SUPABASE_SERVICE_ROLE_KEY\` - Supabase service role key (for background updates)
+- \`PORT\` - Server port (default: 8787)
 
-```
-NODE_OPTIONS=--no-experimental-fetch yarn add supabase
-```
+## Local Development
 
-> **Note**
-For Bun versions below v1.0.17, you must add `supabase` as a [trusted dependency](https://bun.sh/guides/install/trusted) before running `bun add -D supabase`.
+1. **Install dependencies**
+\`\`\`bash
+npm install
+\`\`\`
 
-<details>
-  <summary><b>macOS</b></summary>
+2. **Set up database**
+   
+   Run the migration files in \`supabase/migrations/\` on your Supabase project.
 
-  Available via [Homebrew](https://brew.sh). To install:
+3. **Configure Google OAuth**
+   
+   See [SETUP_GOOGLE_AUTH.md](./SETUP_GOOGLE_AUTH.md) for detailed instructions.
 
-  ```sh
-  brew install supabase/tap/supabase
-  ```
+4. **Start development server**
+\`\`\`bash
+npm run dev:all
+\`\`\`
 
-  To install the beta release channel:
-  
-  ```sh
-  brew install supabase/tap/supabase-beta
-  brew link --overwrite supabase-beta
-  ```
-  
-  To upgrade:
+This will start:
+- Frontend dev server on \`http://localhost:5173\`
+- Backend server on \`http://localhost:8787\`
 
-  ```sh
-  brew upgrade supabase
-  ```
-</details>
+## Production Deployment
 
-<details>
-  <summary><b>Windows</b></summary>
+### Deploy to CapRover
 
-  Available via [Scoop](https://scoop.sh). To install:
+1. **Build and push to repository**
+\`\`\`bash
+git add .
+git commit -m "Ready for deployment"
+git push
+\`\`\`
 
-  ```powershell
-  scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
-  scoop install supabase
-  ```
+2. **Deploy to CapRover**
 
-  To upgrade:
+   The project includes:
+   - \`captain-definition\` - CapRover deployment config
+   - \`Dockerfile\` - Multi-stage Docker build
+   - \`.dockerignore\` - Excludes unnecessary files
 
-  ```powershell
-  scoop update supabase
-  ```
-</details>
+   In CapRover dashboard:
+   - Create a new app
+   - Set environment variables
+   - Deploy from GitHub or upload tar file
 
-<details>
-  <summary><b>Linux</b></summary>
+3. **Set environment variables in CapRover**
+   - Add all required environment variables from \`.env.example\`
+   - Enable HTTPS
+   - Configure your domain
 
-  Available via [Homebrew](https://brew.sh) and Linux packages.
+### Build for Production
 
-  #### via Homebrew
+\`\`\`bash
+npm run build
+\`\`\`
 
-  To install:
+Builds frontend to \`dist/\` folder. Backend serves static files from this folder.
 
-  ```sh
-  brew install supabase/tap/supabase
-  ```
+## Project Structure
 
-  To upgrade:
+\`\`\`
+sora-video-gen/
+├── src/                  # Frontend source
+│   ├── App.jsx          # Main app component
+│   ├── AuthProvider.jsx # Auth context
+│   ├── LoginPage.jsx    # Login UI
+│   └── lib/supabase.js  # Supabase client
+├── server/              # Backend server
+│   └── index.js         # Express API + static file serving
+├── supabase/            # Database migrations
+│   └── migrations/      # SQL migration files
+├── public/              # Static assets
+├── captain-definition   # CapRover deployment config
+├── Dockerfile           # Production Docker image
+└── .env.example         # Environment template
+\`\`\`
 
-  ```sh
-  brew upgrade supabase
-  ```
+## API Endpoints
 
-  #### via Linux packages
+- \`POST /api/generate\` - Create new video generation request
+- \`GET /api/check-status/:requestId\` - Check video generation status
+- \`POST /api/update-video\` - Manually update video status (admin)
+- \`GET /api/health\` - Health check
 
-  Linux packages are provided in [Releases](https://github.com/supabase/cli/releases). To install, download the `.apk`/`.deb`/`.rpm`/`.pkg.tar.zst` file depending on your package manager and run the respective commands.
+## How It Works
 
-  ```sh
-  sudo apk add --allow-untrusted <...>.apk
-  ```
+1. **User submits prompt** → Frontend sends to \`/api/generate\`
+2. **Backend forwards to MUAPI** → Gets \`request_id\`, returns immediately
+3. **Background polling** → Server polls MUAPI every 3 seconds
+4. **Database update** → When complete, updates video URL in Supabase
+5. **Frontend refresh** → Automatically loads completed videos from database
 
-  ```sh
-  sudo dpkg -i <...>.deb
-  ```
+## License
 
-  ```sh
-  sudo rpm -i <...>.rpm
-  ```
+MIT
 
-  ```sh
-  sudo pacman -U <...>.pkg.tar.zst
-  ```
-</details>
+## Support
 
-<details>
-  <summary><b>Other Platforms</b></summary>
-
-  You can also install the CLI via [go modules](https://go.dev/ref/mod#go-install) without the help of package managers.
-
-  ```sh
-  go install github.com/supabase/cli@latest
-  ```
-
-  Add a symlink to the binary in `$PATH` for easier access:
-
-  ```sh
-  ln -s "$(go env GOPATH)/bin/cli" /usr/bin/supabase
-  ```
-
-  This works on other non-standard Linux distros.
-</details>
-
-<details>
-  <summary><b>Community Maintained Packages</b></summary>
-
-  Available via [pkgx](https://pkgx.sh/). Package script [here](https://github.com/pkgxdev/pantry/blob/main/projects/supabase.com/cli/package.yml).
-  To install in your working directory:
-
-  ```bash
-  pkgx install supabase
-  ```
-
-  Available via [Nixpkgs](https://nixos.org/). Package script [here](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/tools/supabase-cli/default.nix).
-</details>
-
-### Run the CLI
-
-```bash
-supabase bootstrap
-```
-
-Or using npx:
-
-```bash
-npx supabase bootstrap
-```
-
-The bootstrap command will guide you through the process of setting up a Supabase project using one of the [starter](https://github.com/supabase-community/supabase-samples/blob/main/samples.json) templates.
-
-## Docs
-
-Command & config reference can be found [here](https://supabase.com/docs/reference/cli/about).
-
-## Breaking changes
-
-We follow semantic versioning for changes that directly impact CLI commands, flags, and configurations.
-
-However, due to dependencies on other service images, we cannot guarantee that schema migrations, seed.sql, and generated types will always work for the same CLI major version. If you need such guarantees, we encourage you to pin a specific version of CLI in package.json.
-
-## Developing
-
-To run from source:
-
-```sh
-# Go >= 1.22
-go run . help
-```
+For issues and questions:
+- MUAPI Documentation: [muapi.ai/docs](https://muapi.ai/docs)
+- Supabase Documentation: [supabase.com/docs](https://supabase.com/docs)
