@@ -4,12 +4,6 @@ import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { createClient } from '@supabase/supabase-js'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import { readFileSync } from 'fs'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 dotenv.config()
 
@@ -18,38 +12,6 @@ const port = process.env.PORT || 3000
 
 app.use(cors())
 app.use(express.json({ limit: '2mb' }))
-
-// Serve static files from dist folder (production build)
-app.use(express.static(path.join(__dirname, '../dist')))
-
-// Cache injected HTML
-let cachedHtml = null
-function getInjectedHtml() {
-  if (cachedHtml) return cachedHtml
-  
-  const htmlPath = path.join(__dirname, '../dist/index.html')
-  const html = readFileSync(htmlPath, 'utf-8')
-  
-  const supabaseUrl = process.env.VITE_SUPABASE_URL || ''
-  const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || ''
-  
-  console.log('Injecting env vars:', { 
-    supabaseUrl: supabaseUrl ? '✓ EXISTS' : '✗ MISSING',
-    supabaseAnonKey: supabaseAnonKey ? '✓ EXISTS' : '✗ MISSING'
-  })
-  
-  const envScript = `
-    <script>
-      window.ENV = {
-        VITE_SUPABASE_URL: '${supabaseUrl}',
-        VITE_SUPABASE_ANON_KEY: '${supabaseAnonKey}'
-      };
-      console.log('window.ENV injected:', window.ENV);
-    </script>
-  `
-  cachedHtml = html.replace('</head>', `${envScript}</head>`)
-  return cachedHtml
-}
 
 const MUAPIAPP_API_KEY = process.env.MUAPIAPP_API_KEY || ''
 const supabaseUrl = process.env.VITE_SUPABASE_URL
@@ -311,26 +273,12 @@ app.post('/api/update-video', async (req, res) => {
   }
 })
 
-// SPA fallback: serve index.html with injected env vars
-app.use((req, res, next) => {
-  // Skip API routes
-  if (req.path.startsWith('/api/')) {
-    return next()
-  }
-  // Serve modified index.html with env vars
-  res.send(getInjectedHtml())
-})
-
 app.listen(port, () => {
   console.log('[server] listening on http://localhost:' + port)
 })
 
-// SPA fallback for non-API routes (after server starts)
-try {
-  const indexPath = path.join(distPath, 'index.html')
-  app.get(/^(?!\/api|\/env\.js).*/, (_req, res) => {
-    res.sendFile(indexPath)
-  })
-} catch (e) {
-  // ignore if dist not present in development
-}
+// SPA fallback for non-API routes
+const indexPath = path.join(distPath, 'index.html')
+app.get(/^(?!\/api|\/env\.js).*/, (_req, res) => {
+  res.sendFile(indexPath)
+})
