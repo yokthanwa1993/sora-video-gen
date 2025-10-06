@@ -286,7 +286,8 @@
 
 .video {
   width: 100%;
-  aspect-ratio: 16/9;
+  max-height: 280px;
+  object-fit: cover;
   background: #000;
   border-radius: 12px;
 }

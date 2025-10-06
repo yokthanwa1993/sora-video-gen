@@ -414,7 +414,7 @@ function App() {
               <div className="card" key={v.id}>
                 {/* Video/Thumbnail Section - แสดงด้านบน */}
                 {v.status === 'loading' && (
-                  <div className="video skeleton" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666', position: 'relative', aspectRatio: v.aspectRatio === '9:16' ? '9 / 16' : '16 / 9' }}>
+                  <div className="video skeleton" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666', position: 'relative' }}>
                     ⏳
                     {v.request_id && (
                       <button
@@ -433,12 +433,12 @@ function App() {
                     controls
                     playsInline
                     onClick={() => openModal(v.url)}
-                    style={{ cursor: 'pointer', aspectRatio: v.aspectRatio === '9:16' ? '9 / 16' : '16 / 9' }}
+                    style={{ cursor: 'pointer' }}
                   />
                 )}
                 
                 {v.status === 'failed' && (
-                  <div className="video" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#2a1a1a', color: '#ff9c9c', aspectRatio: v.aspectRatio === '9:16' ? '9 / 16' : '16 / 9' }}>
+                  <div className="video" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#2a1a1a', color: '#ff9c9c', minHeight: '200px' }}>
                     ⚠️ {v.error || 'เกิดข้อผิดพลาด'}
                   </div>
                 )}
