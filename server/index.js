@@ -28,12 +28,21 @@ function getInjectedHtml() {
   const htmlPath = path.join(__dirname, '../dist/index.html')
   const html = readFileSync(htmlPath, 'utf-8')
   
+  const supabaseUrl = process.env.VITE_SUPABASE_URL || ''
+  const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || ''
+  
+  console.log('Injecting env vars:', { 
+    supabaseUrl: supabaseUrl ? '✓ EXISTS' : '✗ MISSING',
+    supabaseAnonKey: supabaseAnonKey ? '✓ EXISTS' : '✗ MISSING'
+  })
+  
   const envScript = `
     <script>
       window.ENV = {
-        VITE_SUPABASE_URL: '${process.env.VITE_SUPABASE_URL || ''}',
-        VITE_SUPABASE_ANON_KEY: '${process.env.VITE_SUPABASE_ANON_KEY || ''}'
+        VITE_SUPABASE_URL: '${supabaseUrl}',
+        VITE_SUPABASE_ANON_KEY: '${supabaseAnonKey}'
       };
+      console.log('window.ENV injected:', window.ENV);
     </script>
   `
   cachedHtml = html.replace('</head>', `${envScript}</head>`)
