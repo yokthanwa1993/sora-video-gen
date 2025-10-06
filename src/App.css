@@ -131,6 +131,17 @@
   gap: 12px;
 }
 
+/* Options layout: 3 → 2 → 1 columns */
+@media (max-width: 1024px) {
+  .options { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .options { grid-template-columns: 1fr; }
+  .panel { padding: 14px; }
+  .panel-actions { justify-content: stretch; }
+  .panel-actions .primary { width: 100%; }
+}
+
 .field {
   display: grid;
   grid-template-columns: auto 1fr auto;

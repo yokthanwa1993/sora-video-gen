@@ -458,7 +458,7 @@ function App() {
               <div className="prompt-text" title={v.prompt}>{v.prompt}</div>
               
               {v.status === 'loading' && (
-                <div className="video skeleton" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666', position: 'relative' }}>
+                <div className="video skeleton" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666', position: 'relative', aspectRatio: v.aspectRatio === '9:16' ? '9 / 16' : '16 / 9' }}>
                   ⏳
                   {v.request_id && (
                     <button
@@ -471,13 +471,13 @@ function App() {
               )}
               
               {v.status === 'completed' && v.url && (
-                <video 
-                  className="video" 
-                  src={v.url} 
-                  controls 
-                  playsInline 
-                  onClick={() => openModal(v.url)} 
-                  style={{ cursor: 'pointer' }} 
+                <video
+                  className="video"
+                  src={v.url}
+                  controls
+                  playsInline
+                  onClick={() => openModal(v.url)}
+                  style={{ cursor: 'pointer', aspectRatio: v.aspectRatio === '9:16' ? '9 / 16' : '16 / 9' }}
                 />
               )}
               
@@ -492,9 +492,7 @@ function App() {
         )}
       </div>
 
-      <footer className="footer">
-        <span>ใช้ React + Vite + Sora ผ่าน MUAPI</span>
-      </footer>
+      {/* footer removed as requested */}
 
       {showModal && (
         <div className="modal" role="dialog" aria-modal="true">
