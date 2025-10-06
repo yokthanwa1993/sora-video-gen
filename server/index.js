@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { createClient } from '@supabase/supabase-js'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -76,6 +78,23 @@ async function updateVideoRow({ matchField = 'id', matchValue, updates }) {
     return { ok: false, error: e }
   }
 }
+
+// ---------- Static assets (serve built frontend) ----------
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const distPath = path.join(__dirname, '..', 'dist')
+
+// Serve runtime env for frontend (do NOT expose service role key)
+app.get('/env.js', (_req, res) => {
+  const payload = {
+    VITE_SUPABASE_URL: process.env.VITE_SUPABASE_URL || '',
+    VITE_SUPABASE_ANON_KEY: process.env.VITE_SUPABASE_ANON_KEY || '',
+  }
+  res.type('application/javascript').send(`window.ENV = ${JSON.stringify(payload)};`)
+})
+
+// Serve static files if built
+app.use(express.static(distPath))
 
 app.post('/api/generate', async (req, res) => {
   try {
@@ -305,3 +324,13 @@ app.use((req, res, next) => {
 app.listen(port, () => {
   console.log('[server] listening on http://localhost:' + port)
 })
+
+// SPA fallback for non-API routes (after server starts)
+try {
+  const indexPath = path.join(distPath, 'index.html')
+  app.get(/^(?!\/api|\/env\.js).*/, (_req, res) => {
+    res.sendFile(indexPath)
+  })
+} catch (e) {
+  // ignore if dist not present in development
+}
