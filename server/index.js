@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { createClient } from '@supabase/supabase-js'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { readFileSync } from 'fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -18,6 +19,26 @@ app.use(express.json({ limit: '2mb' }))
 
 // Serve static files from dist folder (production build)
 app.use(express.static(path.join(__dirname, '../dist')))
+
+// Cache injected HTML
+let cachedHtml = null
+function getInjectedHtml() {
+  if (cachedHtml) return cachedHtml
+  
+  const htmlPath = path.join(__dirname, '../dist/index.html')
+  const html = readFileSync(htmlPath, 'utf-8')
+  
+  const envScript = `
+    <script>
+      window.ENV = {
+        VITE_SUPABASE_URL: '${process.env.VITE_SUPABASE_URL || ''}',
+        VITE_SUPABASE_ANON_KEY: '${process.env.VITE_SUPABASE_ANON_KEY || ''}'
+      };
+    </script>
+  `
+  cachedHtml = html.replace('</head>', `${envScript}</head>`)
+  return cachedHtml
+}
 
 const MUAPIAPP_API_KEY = process.env.MUAPIAPP_API_KEY || ''
 const supabaseUrl = process.env.VITE_SUPABASE_URL
@@ -262,14 +283,14 @@ app.post('/api/update-video', async (req, res) => {
   }
 })
 
-// SPA fallback: serve index.html for all non-API routes
+// SPA fallback: serve index.html with injected env vars
 app.use((req, res, next) => {
   // Skip API routes
   if (req.path.startsWith('/api/')) {
     return next()
   }
-  // Serve index.html for all other routes
-  res.sendFile(path.join(__dirname, '../dist/index.html'))
+  // Serve modified index.html with env vars
+  res.send(getInjectedHtml())
 })
 
 app.listen(port, () => {
