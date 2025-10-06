@@ -412,7 +412,30 @@ function App() {
             {/* ปุ่มลบทั้งหมดถูกนำออกตามคำขอ */}
             {videos.map((v) => (
               <div className="card" key={v.id}>
-                {/* Video/Thumbnail Section - แสดงด้านบน */}
+                {/* Status & Metadata - แสดงด้านบน */}
+                <div className="meta">
+                  <div className="meta-left">
+                    {v.status === 'loading' && <div className="status running">กำลังสร้าง...</div>}
+                    {v.status === 'completed' && <div className="status succeeded">สำเร็จ</div>}
+                    {v.status === 'failed' && <div className="status failed">ล้มเหลว</div>}
+                    <div className="details">
+                      <span>10s</span>
+                      <span>•</span>
+                      <span>720p</span>
+                      <span>•</span>
+                      <span>{v.aspectRatio}</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => deleteVideo(v.id)}
+                    title="ลบวีดีโอ"
+                    className="delete-btn"
+                  >
+                    ❌
+                  </button>
+                </div>
+
+                {/* Video/Thumbnail Section - แสดงตรงกลาง */}
                 {v.status === 'loading' && (
                   <div className="video skeleton" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666', position: 'relative' }}>
                     ⏳
@@ -443,31 +466,8 @@ function App() {
                   </div>
                 )}
 
-                {/* Prompt Text - แสดงตรงกลาง */}
+                {/* Prompt Text - แสดงด้านล่าง */}
                 <div className="prompt-text" title={v.prompt}>{v.prompt}</div>
-                
-                {/* Status & Metadata - แสดงด้านล่าง */}
-                <div className="meta">
-                  <div className="meta-left">
-                    {v.status === 'loading' && <div className="status running">กำลังสร้าง...</div>}
-                    {v.status === 'completed' && <div className="status succeeded">สำเร็จ</div>}
-                    {v.status === 'failed' && <div className="status failed">ล้มเหลว</div>}
-                    <div className="details">
-                      <span>10s</span>
-                      <span>•</span>
-                      <span>720p</span>
-                      <span>•</span>
-                      <span>{v.aspectRatio}</span>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={() => deleteVideo(v.id)}
-                    title="ลบวีดีโอ"
-                    className="delete-btn"
-                  >
-                    ❌
-                  </button>
-                </div>
               </div>
             ))}
           </>
